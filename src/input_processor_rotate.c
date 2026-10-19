@@ -102,7 +102,9 @@ static int rotate_handle_event(const struct device *dev, struct input_event *eve
 
         data->carry_x += take_scaled(&data->rem_x);
         data->carry_time = k_uptime_get();
-        event->value = (int16_t)CLAMP(take_scaled(&data->rem_y), INT16_MIN, INT16_MAX);
+        // Not inline in CLAMP: the macro evaluates its argument more than once
+        int32_t out_y = take_scaled(&data->rem_y);
+        event->value = (int16_t)CLAMP(out_y, INT16_MIN, INT16_MAX);
         return ZMK_INPUT_PROC_CONTINUE;
     }
 
