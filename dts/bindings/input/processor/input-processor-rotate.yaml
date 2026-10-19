@@ -23,6 +23,9 @@ properties:
     type: int
     required: true
     description: Rotation angle in degrees (-90 to 90).
+  track-remainders:
+    type: boolean
+    description: Unused (remainders are always tracked internally); required by zmk,input-listener.
   carry-timeout-ms:
     type: int
     default: 100
