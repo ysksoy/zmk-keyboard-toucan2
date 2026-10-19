@@ -1,0 +1,29 @@
+description: |
+  ZMK input processor that rotates relative X/Y movement by a fixed angle.
+  Used to compensate for the tilted trackpad on Toucan2.
+
+  Positive degrees compensate for a trackpad that is rotated counter-clockwise
+  (its top edge rises to the right). Use a negative value for the opposite tilt.
+
+  X and Y arrive as separate events (X without sync, then Y with sync), so the
+  rotated Y is emitted immediately and the rotated X is carried over to the next
+  X event. Total movement is preserved; X lags by one report.
+
+  Example:
+    zip_rotate: zip_rotate {
+        compatible = "zmk,input-processor-rotate";
+        #input-processor-cells = <0>;
+        rotation-degrees = <20>;
+    };
+
+compatible: "zmk,input-processor-rotate"
+
+properties:
+  rotation-degrees:
+    type: int
+    required: true
+    description: Rotation angle in degrees (-90 to 90).
+  carry-timeout-ms:
+    type: int
+    default: 100
+    description: Drop a carried-over X value older than this (e.g. after lifting the finger).
