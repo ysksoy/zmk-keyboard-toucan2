@@ -115,7 +115,7 @@
             #input-processor-cells = <0>;
 
             codes = <INPUT_BTN_TOUCH>;      // watch for the 'touch' pseudo button
-            bindings  = <&mo 4>;            // Activate Layer 4 while held &mo 4
+            bindings  = <&mo 7>;            // Activate MOUSE layer (LAYER_MOUSE = 7 in config/toucan.keymap) while touching
         };
 
         swipe_button_mapper: swipe_button_mapper {
@@ -147,7 +147,7 @@
         device = <&trackpad_split>;
         input-processors = <&zip_xy_scaler 100 100>, <&zip_scroll_scaler 1 20>, <&zip_zoom_mapper>, <&is_touching_processor>, <&swipe_button_mapper>;
         scroller {
-            layers = <1 2>;
+            layers = <2 3 5 6>; // MAC_NAV, MAC_SYM, WIN_NAV, WIN_SYM in config/toucan.keymap
             input-processors = <
                 &zip_xy_to_scroll_mapper
                 &zip_scroll_scaler 1 20

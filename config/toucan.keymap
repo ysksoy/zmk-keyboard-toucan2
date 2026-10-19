@@ -1,20 +1,178 @@
 #include <behaviors.dtsi>
-#include <dt-bindings/zmk/keys.h>
 #include <dt-bindings/zmk/bt.h>
-#include <dt-bindings/zmk/outputs.h>
+#include <dt-bindings/zmk/keys.h>
+#include <dt-bindings/zmk/modifiers.h>
 #include <dt-bindings/zmk/pointing.h>
 
-#define BASE 0
-#define NAV  1
-#define SYM  2
-#define ADJ  3
+#define LAYER_MAC      0
+#define LAYER_WIN      1
+#define LAYER_MAC_NAV  2
+#define LAYER_MAC_SYM  3
+#define LAYER_ADJ      4
+#define LAYER_WIN_NAV  5
+#define LAYER_WIN_SYM  6
+#define LAYER_MOUSE    7  // Toucan2: activated while touching the trackpad (see toucan.dtsi)
+
+#define WIN_JIS_EXCL   LS(N1)
+#define WIN_JIS_AT     LBKT
+#define WIN_JIS_HASH   LS(N3)
+#define WIN_JIS_DLLR   LS(N4)
+#define WIN_JIS_PRCNT  LS(N5)
+#define WIN_JIS_CARET  EQUAL
+#define WIN_JIS_AMPS   LS(N6)
+#define WIN_JIS_ASTRK  LS(SQT)
+#define WIN_JIS_LPAR   LS(N8)
+#define WIN_JIS_RPAR   LS(N9)
+#define WIN_JIS_EQUAL  LS(MINUS)
+#define WIN_JIS_LBKT   RBKT
+#define WIN_JIS_RBKT   BSLH
+#define WIN_JIS_BSLH   INT3
+#define WIN_JIS_GRAVE  LS(LBKT)
+#define WIN_JIS_UNDER  LS(INT1)
+#define WIN_JIS_PLUS   LS(SEMI)
+#define WIN_JIS_LBRC   LS(RBKT)
+#define WIN_JIS_RBRC   LS(BSLH)
+#define WIN_JIS_PIPE   LS(INT3)
+#define WIN_JIS_TILDE  LS(EQUAL)
+#define WIN_JIS_APOS   LS(N7)
 
 / {
+    behaviors {
+        win_semi_colon: win_semi_colon {
+            compatible = "zmk,behavior-mod-morph";
+            #binding-cells = <0>;
+            bindings = <&kp SEMI>, <&kp SQT>;
+            mods = <(MOD_LSFT|MOD_RSFT)>;
+        };
+
+        win_apos_dqt: win_apos_dqt {
+            compatible = "zmk,behavior-mod-morph";
+            #binding-cells = <0>;
+            bindings = <&kp WIN_JIS_APOS>, <&kp LS(N2)>;
+            mods = <(MOD_LSFT|MOD_RSFT)>;
+        };
+    };
+
     conditional_layers {
         compatible = "zmk,conditional-layers";
-        tri_layer {
-            if-layers = <1 2>;
-            then-layer = <3>;
+
+        mac_tri_layer {
+            if-layers = <LAYER_MAC_NAV LAYER_MAC_SYM>;
+            then-layer = <LAYER_ADJ>;
+        };
+
+        win_tri_layer {
+            if-layers = <LAYER_WIN_NAV LAYER_WIN_SYM>;
+            then-layer = <LAYER_ADJ>;
+        };
+    };
+
+    combos {
+        compatible = "zmk,combos";
+
+        rightclick {
+            bindings = <&mkp RCLK>;
+            key-positions = <20 21>;
+        };
+
+        leftclick {
+            bindings = <&mkp LCLK>;
+            key-positions = <19 18>;
+        };
+
+        // Mac-specific combos
+
+        returninbrows_mac {
+            bindings = <&kp LG(LEFT_BRACKET)>;
+            key-positions = <14 15>;
+            layers = <LAYER_MAC>;
+        };
+
+        goahead_mac {
+            bindings = <&kp RG(RIGHT_BRACKET)>;
+            key-positions = <17 16>;
+            layers = <LAYER_MAC>;
+        };
+
+        screenshot_mac {
+            bindings = <&kp LG(LS(LC(NUMBER_4)))>;
+            key-positions = <0 1>;
+            layers = <LAYER_MAC>;
+        };
+
+        reloadingbrows_mac {
+            bindings = <&kp LG(R)>;
+            key-positions = <15 16>;
+            layers = <LAYER_MAC>;
+        };
+
+        controlcenter_mac {
+            bindings = <&kp LC(UP_ARROW)>;
+            key-positions = <26 27>;
+            layers = <LAYER_MAC>;
+        };
+
+        // Windows-specific combos
+
+        returninbrows_win {
+            bindings = <&kp K_BACK>;
+            key-positions = <14 15>;
+            layers = <LAYER_WIN>;
+        };
+
+        goahead_win {
+            bindings = <&kp K_FORWARD>;
+            key-positions = <17 16>;
+            layers = <LAYER_WIN>;
+        };
+
+        screenshot_win {
+            bindings = <&kp LG(LS(S))>;
+            key-positions = <0 1>;
+            layers = <LAYER_WIN>;
+        };
+
+        reloadingbrows_win {
+            bindings = <&kp F5>;
+            key-positions = <15 16>;
+            layers = <LAYER_WIN>;
+        };
+
+        taskview_win {
+            bindings = <&kp LG(TAB)>;
+            key-positions = <26 27>;
+            layers = <LAYER_WIN>;
+        };
+
+        // Common combos (work on both layers)
+
+        minus {
+            bindings = <&kp MINUS>;
+            key-positions = <9 10>;
+        };
+
+        controlleft {
+            bindings = <&kp LC(LEFT_ARROW)>;
+            key-positions = <12 13>;
+            layers = <LAYER_MAC>;
+        };
+
+        controlright {
+            bindings = <&kp LC(RIGHT_ARROW)>;
+            key-positions = <29 28>;
+            layers = <LAYER_MAC>;
+        };
+
+        controlleft_win {
+            bindings = <&kp LG(LC(LEFT_ARROW))>;
+            key-positions = <12 13>;
+            layers = <LAYER_WIN>;
+        };
+
+        controlright_win {
+            bindings = <&kp LG(LC(RIGHT_ARROW))>;
+            key-positions = <29 28>;
+            layers = <LAYER_WIN>;
         };
     };
 
@@ -24,59 +182,61 @@
         base {
             display-name = "BASE";
             bindings = <
-                &kp TAB   &kp Q &kp W &kp E &kp R &kp T   &kp Y &kp U  &kp I     &kp O   &kp P    &kp BSPC
-                &kp LCTRL &kp A &kp S &kp D &kp F &kp G   &kp H &kp J  &kp K     &kp L   &kp SEMI &kp SQT
-                &kp LSHFT &kp Z &kp X &kp C &kp V &kp B   &kp N &kp M  &kp COMMA &kp DOT &kp FSLH &kp ESC
-                                &kp LGUI &mo 1 &kp SPACE   &kp RET &mo 2 &kp RALT
+&kp TAB  &kp Q  &kp W  &kp E  &kp R  &kp T  &kp Y  &kp U  &kp I  &kp O  &kp P  &kp BSPC  &kp LCTRL  &kp A  &kp S  &kp D  &kp F  &kp G  &kp H  &kp J  &kp K  &kp L  &kp SEMI  &kp SQT  &kp F13  &kp Z  &kp X  &kp C  &kp V  &kp B  &kp N  &kp M  &kp COMMA  &kp DOT  &kp FSLH  &kp ESCAPE  &mt LEFT_GUI LS(LANG2)  &mo LAYER_MAC_NAV  &mt LEFT_SHIFT SPACE  &kp RET  &mo LAYER_MAC_SYM  &mt RIGHT_ALT LANG1
             >;
         };
 
-        nav {
+        win {
+            display-name = "WIN";
+            bindings = <
+&kp TAB  &kp Q  &kp W  &kp E  &kp R  &kp T  &kp Y  &kp U  &kp I  &kp O  &kp P  &kp BSPC  &kp LCTRL  &kp A  &kp S  &kp D  &kp F  &kp G  &kp H  &kp J  &kp K  &kp L  &win_semi_colon  &win_apos_dqt  &kp F13  &kp Z  &kp X  &kp C  &kp V  &kp B  &kp N  &kp M  &kp COMMA  &kp DOT  &kp FSLH  &kp ESCAPE  &mt LCTRL LANG2  &mo LAYER_WIN_NAV  &mt LEFT_SHIFT SPACE  &kp RET  &mo LAYER_WIN_SYM  &mt RIGHT_ALT LANG1
+            >;
+        };
+
+        mac_nav {
             display-name = "NAV";
             bindings = <
-                &kp TAB     &kp N1          &kp N2       &kp N3       &kp N4       &kp N5         &kp N6   &kp N7   &kp N8 &kp N9    &kp N0 &kp BSPC
-                &bt BT_CLR  &bt BT_SEL 0    &bt BT_SEL 1 &bt BT_SEL 2 &bt BT_SEL 3 &bt BT_SEL 4   &kp LEFT &kp DOWN &kp UP &kp RIGHT &trans &trans
-                &kp LSHFT   &studio_unlock  &trans       &trans       &trans       &trans         &trans   &trans   &trans &trans    &trans &trans
-                                                &kp LGUI     &trans       &kp SPACE      &kp RET  &trans   &kp RALT
+&kp TAB  &kp N1  &kp N2  &kp N3  &kp N4  &kp N5  &kp N1  &kp N2  &kp N3  &kp N0  &kp N0  &kp BSPC  &bt BT_CLR  &bt BT_SEL 0  &bt BT_SEL 1  &bt BT_SEL 2  &bt BT_SEL 3  &bt BT_SEL 4  &kp N4  &kp N5  &kp NUMBER_6  &kp RIGHT  &trans  &trans  &kp LSHFT  &studio_unlock  &trans  &trans  &trans  &trans  &kp N7  &kp N8  &kp N9  &trans  &trans  &kp RA(SPACE)  &kp LGUI  &trans  &kp SPACE  &kp RET  &trans  &kp RALT
             >;
         };
 
-        sym {
+        mac_sym {
             display-name = "SYM";
             bindings = <
-                &kp TAB   &kp EXCL &kp AT &kp HASH &kp DLLR &kp PRCNT   &kp CARET &kp AMPS  &kp KP_MULTIPLY &kp LPAR &kp RPAR &kp BSPC
-                &kp LCTRL &trans   &trans &trans   &trans   &trans      &kp MINUS &kp EQUAL &kp LBKT        &kp RBKT &kp BSLH &kp GRAVE
-                &kp LSHFT &trans   &trans &trans   &trans   &trans      &kp UNDER &kp PLUS  &kp LBRC        &kp RBRC &kp PIPE &kp TILDE
-                                          &kp LGUI &trans   &kp SPACE   &kp RET   &trans    &kp RALT
+&kp TAB  &kp EXCL  &kp AT  &kp HASH  &kp DLLR  &kp PRCNT  &kp CARET  &kp AMPS  &kp KP_MULTIPLY  &kp LPAR  &kp RPAR  &kp BSPC  &kp LCTRL  &trans  &trans  &kp UP_ARROW  &trans  &trans  &kp MINUS  &kp EQUAL  &kp LBKT  &kp RBKT  &kp BSLH  &kp GRAVE  &kp LSHFT  &trans  &kp LEFT_ARROW  &kp DOWN_ARROW  &kp RIGHT_ARROW  &trans  &kp UNDER  &kp PLUS  &kp LBRC  &kp RBRC  &kp PIPE  &kp TILDE  &kp LGUI  &trans  &kp SPACE  &kp RET  &trans  &kp RALT
             >;
         };
 
         adj {
             display-name = "ADJ";
             bindings = <
-                &mo TAB   &trans &kp F7 &kp F8 &kp F9 &kp F12   &kp C_VOL_DN &kp C_MUTE  &kp C_VOL_UP &trans &trans &kp BSPC
-                &kp LCTRL &trans &kp F4 &kp F5 &kp F6 &kp F11   &trans       &trans      &trans       &trans &trans &trans
-                &bt LSHFT &trans &kp F1 &kp F2 &kp F3 &kp F10   &trans       &trans      &trans       &trans &trans &trans
-                                   &kp LGUI &mo NAV &kp SPACE   &kp RET &mo 2 &kp RALT
+&mo LAYER_MAC  &trans  &kp F7  &kp F8  &kp F9  &kp F12  &kp C_VOL_DN  &kp C_MUTE  &kp C_VOL_UP  &trans  &trans  &kp BSPC  &kp LCTRL  &trans  &kp F4  &kp F5  &kp F6  &kp F11  &trans  &trans  &trans  &trans  &trans  &trans  &kp LSHFT  &to LAYER_MAC  &to LAYER_WIN  &kp F3  &trans  &kp F10  &trans  &trans  &trans  &trans  &trans  &trans  &kp LGUI  &mo LAYER_MAC_NAV  &kp SPACE  &kp RET  &mo LAYER_MAC_SYM  &kp RALT
+            >;
+        };
+
+        win_nav {
+            display-name = "WIN_NAV";
+            bindings = <
+&kp TAB  &kp N1  &kp N2  &kp N3  &kp N4  &kp N5  &kp N1  &kp N2  &kp N3  &kp N0  &kp N0  &kp BSPC  &bt BT_CLR  &bt BT_SEL 0  &bt BT_SEL 1  &bt BT_SEL 2  &bt BT_SEL 3  &bt BT_SEL 4  &kp N4  &kp N5  &kp NUMBER_6  &kp RIGHT  &win_semi_colon  &win_apos_dqt  &kp LSHFT  &studio_unlock  &kp X  &kp C  &kp V  &kp B  &kp N7  &kp N8  &kp N9  &kp DOT  &kp FSLH  &kp RA(SPACE)  &kp LGUI  &mo LAYER_WIN_NAV  &kp SPACE  &kp RET  &mo LAYER_WIN_SYM  &kp RALT
+            >;
+        };
+
+        win_sym {
+            display-name = "WIN_SYM";
+            bindings = <
+&kp TAB  &kp WIN_JIS_EXCL  &kp WIN_JIS_AT  &kp WIN_JIS_HASH  &kp WIN_JIS_DLLR  &kp WIN_JIS_PRCNT  &kp WIN_JIS_CARET  &kp WIN_JIS_AMPS  &kp WIN_JIS_ASTRK  &kp WIN_JIS_LPAR  &kp WIN_JIS_RPAR  &kp BSPC  &kp LCTRL  &kp A  &kp S  &kp UP_ARROW  &kp F  &kp G  &kp MINUS  &kp WIN_JIS_EQUAL  &kp WIN_JIS_LBKT  &kp WIN_JIS_RBKT  &kp WIN_JIS_BSLH  &kp WIN_JIS_GRAVE  &kp LSHFT  &kp Z  &kp LEFT_ARROW  &kp DOWN_ARROW  &kp RIGHT_ARROW  &kp B  &kp WIN_JIS_UNDER  &kp WIN_JIS_PLUS  &kp WIN_JIS_LBRC  &kp WIN_JIS_RBRC  &kp WIN_JIS_PIPE  &kp WIN_JIS_TILDE  &kp LGUI  &mo LAYER_WIN_NAV  &kp SPACE  &kp RET  &mo LAYER_WIN_SYM  &kp RALT
             >;
         };
 
         mouse {
             display-name = "MOU";
             bindings = <
-                &trans &trans &trans &trans &trans &trans           &trans &trans &trans &trans &trans &trans
-                &trans &trans &trans &trans &trans &trans           &trans &trans &trans &trans &trans &trans
-                &trans &trans &trans &trans &trans &trans           &trans &trans &trans &trans &trans &trans
-                            &mkp MCLK &mkp LCLK &mkp RCLK           &mkp LCLK &mkp RCLK &mkp MCLK
+&trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &mkp MCLK  &mkp LCLK  &mkp RCLK  &mkp LCLK  &mkp RCLK  &mkp MCLK
             >;
         };
 
-        extra_2 {
-                status = "reserved";
-        };
+        extra_2 { status = "reserved"; };
 
-        extra_3 {
-                status = "reserved";
-        };
+        extra_3 { status = "reserved"; };
     };
 };
