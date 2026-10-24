@@ -29,7 +29,7 @@ WindowsモードからMac用の`BASE`へ戻す場合も、`to MAC`を押しま�
 - **Layer 7 (MOUSE)**: Toucan2のトラックパッドに触れている間だけ自動で有効化（親指キーがクリックになる）
 
 Toucan2ではトラックパッドが参照するレイヤー番号が `boards/shields/toucan/toucan.dtsi` に直接書かれています。
-レイヤーの順番を変える場合は、`is_touching_processor` の `&mo 7` と `scroller` の `layers = <2 3 5 6>` も合わせて変更してください。
+レイヤーの順番を変える場合は、`is_touching_processor` の `&mo 7`、`trackpad_listener` 内の `mac_scroller`（`layers = <2 3>`）・`win_scroller`（`layers = <5 6>`）・`win_mode`（`layers = <1>`）も合わせて変更してください。
 
 Windows用のNAV/SYMはMac用のNAV/SYMと完全に分けています。
 Mac用NAV/SYMで`&trans`になっていた位置は、Windows用NAV/SYMではMacモードで実際に出ていたキーを明示的に割り当てています。
@@ -46,6 +46,14 @@ Windows用SYMの記号は、Windowsの日本語キーボード配列でMac用SYM
 ### Windowsモード（Layer 1）
 - **左親指（外側）**: 長押し `Ctrl` / タップ `LANG2`
 - **右親指（外側）**: 長押し `Alt` / タップ `LANG1`
+
+### トラックパッドのスクロール方向
+どちらのモードでも、内蔵トラックパッドと同じナチュラルなスクロールになるようにしています。
+
+- **Macモード**: Toucanは従来方向の値を送ります。macOSの「ナチュラルなスクロール」を**オン**にしてください（内蔵トラックパッドとマウスで共通の設定です）。
+- **Windowsモード**: Toucanがナチュラル方向の値を送ります。Windowsはマウスのスクロールを反転しないので、設定は不要です。
+
+設定は `boards/shields/toucan/toucan.dtsi` の `trackpad_listener`（`mac_scroller` / `win_scroller` / `win_mode`）にあります。
 
 ## コンボキー（同時押しショートカット）
 

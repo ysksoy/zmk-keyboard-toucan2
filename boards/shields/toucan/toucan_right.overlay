@@ -75,8 +75,7 @@
         three-finger-swipe;
         three-finger-swipe-throttle-ms = <1200>;
         switch-xy;
-        // Natural scrolling: content follows the fingers (wheel = +dy, hwheel = -dx)
-        invert-scroll-x;
+        invert-scroll-y; // Traditional scroll values; Windows mode flips them in toucan.dtsi (win_mode)
 
     };
 };
