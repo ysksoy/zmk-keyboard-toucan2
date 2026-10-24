@@ -105,6 +105,12 @@
             rotation-degrees = <20>;
         };
 
+        // One-finger layer scroll: stick to the dominant axis so it does not wobble.
+        zip_scroll_axis_lock: zip_scroll_axis_lock {
+            compatible = "zmk,input-processor-scroll-axis-lock";
+            #input-processor-cells = <0>;
+        };
+
         zip_zoom_mapper: zip_zoom_mapper {
             compatible = "zmk,input-processor-zoom";
             #input-processor-cells = <0>;
@@ -163,6 +169,7 @@
             input-processors = <
                 &zip_rotate
                 &zip_xy_to_scroll_mapper
+                &zip_scroll_axis_lock
                 &zip_scroll_scaler 1 20
                 &zip_scroll_transform INPUT_TRANSFORM_Y_INVERT
             >;
@@ -172,6 +179,7 @@
             input-processors = <
                 &zip_rotate
                 &zip_xy_to_scroll_mapper
+                &zip_scroll_axis_lock
                 &zip_scroll_scaler 1 20
                 &zip_scroll_transform INPUT_TRANSFORM_X_INVERT
             >;

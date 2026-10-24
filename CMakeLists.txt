@@ -1,3 +1,4 @@
 zephyr_library()
 zephyr_library_include_directories(${APPLICATION_SOURCE_DIR}/include)
 zephyr_library_sources(src/input_processor_rotate.c)
+zephyr_library_sources(src/input_processor_scroll_axis_lock.c)

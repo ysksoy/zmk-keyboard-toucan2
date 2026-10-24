@@ -1,0 +1,28 @@
+description: |
+  ZMK input processor that locks scrolling to one axis per gesture.
+  Place it after the XY-to-scroll mapper and before the scroll scaler.
+
+  HWHEEL and WHEEL arrive as separate events (HWHEEL without sync, then WHEEL with sync).
+  Once enough movement has accumulated, the dominant axis is locked until scrolling stops
+  for release-ms; the other axis is dropped.
+
+  Example:
+    zip_scroll_axis_lock: zip_scroll_axis_lock {
+        compatible = "zmk,input-processor-scroll-axis-lock";
+        #input-processor-cells = <0>;
+    };
+
+compatible: "zmk,input-processor-scroll-axis-lock"
+
+properties:
+  threshold:
+    type: int
+    default: 8
+    description: Movement (before scaling) needed to pick the axis at the start of a gesture.
+  release-ms:
+    type: int
+    default: 300
+    description: Unlock the axis after this long without scroll movement.
+  track-remainders:
+    type: boolean
+    description: Unused; required by zmk,input-listener.
