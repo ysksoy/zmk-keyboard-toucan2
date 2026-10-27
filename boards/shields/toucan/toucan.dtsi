@@ -159,41 +159,17 @@
         compatible = "zmk,input-listener";
         status = "disabled";
         device = <&trackpad_split>;
-        // Scroll direction per OS mode:
-        //   Mac: traditional values; macOS "Natural scrolling" flips them, matching the built-in trackpad.
-        //   Win: natural values; Windows does not flip mouse wheels.
-        // The first override whose layer is active wins, so the scrollers must stay above win_mode.
+        // Scroll values are the same in Mac and Windows modes: flipping them for Windows
+        // made both scroll types feel reversed there. Keep macOS "Natural scrolling" on.
         input-processors = <&zip_rotate>, <&zip_xy_scaler 100 100>, <&zip_scroll_scaler 1 25>, <&zip_zoom_mapper>, <&is_touching_processor>, <&swipe_button_mapper>;
-        mac_scroller {
-            layers = <2 3>; // MAC_NAV, MAC_SYM in config/toucan.keymap
+        scroller {
+            layers = <2 3 5 6>; // MAC_NAV, MAC_SYM, WIN_NAV, WIN_SYM in config/toucan.keymap
             input-processors = <
                 &zip_rotate
                 &zip_xy_to_scroll_mapper
                 &zip_scroll_axis_lock
                 &zip_scroll_scaler 1 25
                 &zip_scroll_transform INPUT_TRANSFORM_X_INVERT
-            >;
-        };
-        win_scroller {
-            layers = <5 6>; // WIN_NAV, WIN_SYM in config/toucan.keymap
-            input-processors = <
-                &zip_rotate
-                &zip_xy_to_scroll_mapper
-                &zip_scroll_axis_lock
-                &zip_scroll_scaler 1 25
-                &zip_scroll_transform INPUT_TRANSFORM_Y_INVERT
-            >;
-        };
-        win_mode {
-            layers = <1>; // WIN base layer, active the whole time Windows mode is on
-            input-processors = <
-                &zip_rotate
-                &zip_xy_scaler 100 100
-                &zip_scroll_scaler 1 25
-                &zip_scroll_transform (INPUT_TRANSFORM_X_INVERT | INPUT_TRANSFORM_Y_INVERT)
-                &zip_zoom_mapper
-                &is_touching_processor
-                &swipe_button_mapper
             >;
         };
     };
